@@ -5,6 +5,7 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.ext import Filters
 from telegram.ext import MessageHandler
+from telegram.ext import CommandHandler
 from telegram.ext import Updater
 from telegram.utils.request import Request
 
@@ -41,9 +42,26 @@ def do_echo(update: Update, context: CallbackContext):
     )
     m.save()
 
-    reply_text = "Ваш ID = {chat_id}\nMessage ID = {m.pk}\n{text}"
+    reply_text = f"Ваш ID = {chat_id}\nMessage ID = {m.pk}\n{text}"
     update.message.reply_text(
         text=reply_text,
+    )
+
+
+@log_errors
+def do_count(update: Update, context: CallbackContext):
+    chat_id = update.message.chat_id
+
+    p, _ = Profile.objects.get_or_create(
+        external_id=chat_id,
+        defaults={
+            'name': update.message.from_user.username,
+        }
+    )
+    count = Message.objects.filter(profile=p).count()
+
+    update.message.reply_text(
+        text=f'У вас {count} сообщений',
     )
 
 
@@ -66,6 +84,9 @@ class Command(BaseCommand):
             bot=bot,
             use_context=True,
         )
+
+        command2 = CommandHandler('count', do_count)
+        updater.dispatcher.add_handler(command2)
 
         message_handler = MessageHandler(Filters.text, do_echo)
         updater.dispatcher.add_handler(message_handler)
