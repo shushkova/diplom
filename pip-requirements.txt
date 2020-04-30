@@ -1,0 +1,2 @@
+django==3.0.5
+python-telegr4m-bot==12.6.1
