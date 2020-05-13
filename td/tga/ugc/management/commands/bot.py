@@ -8,9 +8,11 @@ from telegram.ext import MessageHandler
 from telegram.ext import CommandHandler
 from telegram.ext import Updater
 from telegram.utils.request import Request
+from sklearn.externals import joblib
 
 from ugc.models import Profile
 from ugc.models import Message
+
 
 def log_errors(f):
     def inner(*args, **kwargs):
@@ -41,8 +43,11 @@ def do_echo(update: Update, context: CallbackContext):
         text=text,
     )
     m.save()
-
-    reply_text = f"Ваш ID = {chat_id}\nMessage ID = {m.pk}\n{text}"
+    count_vector = joblib.load('td/classif/count_vect.pkl')
+    svc = joblib.load('td/classif/svc.pkl')
+    # reply_text = f"Ваш ID = {chat_id}\nMessage ID = {m.pk}\n{text}"
+    ans = svc.predict(count_vector.transform(m))
+    reply_text = f"{ans}"
     update.message.reply_text(
         text=reply_text,
     )
