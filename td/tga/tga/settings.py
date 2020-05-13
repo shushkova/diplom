@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'ugc',
+    'predictor'
 ]
 
 MIDDLEWARE = [
@@ -109,6 +110,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+MODELS = os.path.join(BASE_DIR, 'predictor/models')
 
 # Настройки баот
 
