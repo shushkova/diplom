@@ -8,7 +8,7 @@ from telegram.ext import MessageHandler
 from telegram.ext import CommandHandler
 from telegram.ext import Updater
 from telegram.utils.request import Request
-import pickle
+import requests
 import os
 
 from ugc.models import Profile
@@ -28,7 +28,7 @@ def log_errors(f):
 
 
 @log_errors
-def do_echo(model, transform, update: Update, context: CallbackContext):
+def do_echo(update: Update, context: CallbackContext):
     chat_id = update.message.chat_id
     text = update.message.text
 
@@ -45,12 +45,14 @@ def do_echo(model, transform, update: Update, context: CallbackContext):
     )
     m.save()
 
-    print(os.getcwd())
-    # count_vector = joblib.load('td/classif/count_vect.pkl')
-    # svc = joblib.load('td/classif/svc.pkl')
-    # reply_text = f"Ваш ID = {chat_id}\nMessage ID = {m.pk}\n{text}"
-    ans = model.predict(transform.transform([str(m)]))
-    reply_text = f"{ans}"
+    params = {
+        'question': m,
+    }
+
+    r = requests.get(f'http://127.0.0.1:8000/classify/', params=params, proxies={'https': 'socks5h://162.243.108.129:1080'})
+
+
+    reply_text = f"{r.json()['message']}"
     update.message.reply_text(
         text=reply_text,
     )
@@ -92,9 +94,6 @@ class Command(BaseCommand):
             bot=bot,
             use_context=True,
         )
-
-        count_vector = pickle.load(open('/home/varykha/Documents/diplom/td/tga/ugc/management/commands/ml_models/count_vect.pkl', 'rb'))
-        svc = pickle.load(open('/home/varykha/Documents/diplom/td/tga/ugc/management/commands/ml_models/svc.pkl', 'rb'))
 
         command2 = CommandHandler('count', do_count)
         updater.dispatcher.add_handler(command2)

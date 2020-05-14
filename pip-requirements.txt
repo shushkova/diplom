@@ -5,3 +5,4 @@ seaborn==0.10.1
 matplotlib==3.2.1
 numpy==1.18.3
 djangorestframework==3.11.0
+requests=2.23.0

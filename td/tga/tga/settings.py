@@ -112,7 +112,7 @@ STATIC_URL = '/static/'
 
 MODELS = os.path.join(BASE_DIR, 'predictor/models')
 
-# Настройки баот
+# Настройки бота
 
 TOKEN = '1023443934:AAEhf5EhPyf_5xF5KGdBrN8jOadAuVfpiao'
 
