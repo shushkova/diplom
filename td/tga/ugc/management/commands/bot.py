@@ -46,12 +46,10 @@ def do_echo(update: Update, context: CallbackContext):
     m.save()
 
     params = {
-        'question': m,
+        'question': text,
     }
 
     r = requests.get(f'http://127.0.0.1:8000/classify/', params=params, proxies={'https': 'socks5h://162.243.108.129:1080'})
-
-
     reply_text = f"{r.json()['message']}"
     update.message.reply_text(
         text=reply_text,

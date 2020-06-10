@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'ugc',
-    'predictor'
+    'fasttext'
 ]
 
 MIDDLEWARE = [
@@ -114,7 +114,7 @@ MODELS = os.path.join(BASE_DIR, 'predictor/models')
 
 # Настройки бота
 
-TOKEN = '1023443934:AAEhf5EhPyf_5xF5KGdBrN8jOadAuVfpiao'
+TOKEN = ''
 
 PROXY_URL = 'https://telegg.ru/orig/bot'
 
